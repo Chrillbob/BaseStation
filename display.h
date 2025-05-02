@@ -92,11 +92,14 @@ enum display_register_select{DISPLAY_INSTR_REG = 0, DISPLAY_DATA_REG = 1};
 enum display_interface_data_length{DISPLAY_INTERFACE_FOUR_BIT = 0, DISPLAY_INTERFACE_EIGHT_BIT = 1};
 enum display_lines{DISPLAY_ONE_LINE = 0, DISPLAY_TWO_LINES = 1};
 enum display_character_font{DISPLAY_SIMPLE_FONT = 0, DISPLAY_DETAILED_FONT = 1};
-enum display_shift{DISPLAY_CURSOR_MOVE = 0, DISPLAY_SHIFT_DISPLAY = 1};
-enum display_shift_right_left{DISPLAY_SHIFT_LEFT = 0, DISPLAY_SHIFT_RIGHT = 1};
 enum display_on_off{DISPLAY_OFF = 0, DISPLAY_ON = 1};
 enum display_cursor_on_off{DISPLAY_CURSOR_OFF = 0, DISPLAY_CURSOR_ON = 1};
 enum display_cursor_blinking_on_off{DISPLAY_CURSOR_BLINKING_OFF = 0, DISPLAY_CURSOR_BLINKING_ON = 1};
+enum display_address_increment{DISPLAY_ADDRESS_DEC = 0, DISPLAY_ADDRESS_INC = 1};
+enum display_cursor_following{DISPLAY_STATIC = 0, DISPLAY_FOLLOWING = 1};
+
+enum display_shift{DISPLAY_CURSOR_MOVE = 0, DISPLAY_SHIFT_DISPLAY = 1};
+enum display_shift_right_left{DISPLAY_SHIFT_LEFT = 0, DISPLAY_SHIFT_RIGHT = 1};
 
 
 
