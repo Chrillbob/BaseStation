@@ -33,6 +33,17 @@ int main()
 
     init_display(display_config);
 
+    sleep_ms(5000);
+
+    printf("\nClear display\n");
+    display_clear();
+    sleep_ms(5);
+
+    printf("\nPrint \"Hello World\"\n");
+
+    display_print_string("Hello World!");
+    display_set_cursor(1, 3);
+    display_print_string("Welcome");
 
     // Initialise the Wi-Fi chip
     if (cyw43_arch_init()) {
