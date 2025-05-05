@@ -40,6 +40,7 @@
         "display.h": "c",
         "stdio.h": "c",
         "stdlib.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "keypad.h": "c"
     }
 }
