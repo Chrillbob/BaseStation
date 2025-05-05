@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(BaseStation BaseStation.c display.c)
+add_executable(BaseStation BaseStation.c display.c keypad.c)
 
 pico_set_program_name(BaseStation "BaseStation")
 pico_set_program_version(BaseStation "0.1")

@@ -1,7 +1,8 @@
 /*
 Library for interfacing with HD44780 display controller.
-4-bit operation is not supported.
+4-bit operation is not supported (yet).
 
+Author: Christian Roager Jespersen
 */
 
 

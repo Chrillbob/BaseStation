@@ -3,6 +3,7 @@
 #include "pico/cyw43_arch.h"
 
 #include "display.h"
+#include "keypad.h"
 
 #define _DEBUGGING_
 
@@ -10,40 +11,69 @@
 #include "pico/time.h"
 #endif
 
+#define N_ROWS 4
+#define N_COLS 3
+
+const char key_matrix[N_ROWS][N_COLS] = { {'1', '2', '3'},
+                                {'4', '5', '6'},
+                                {'7', '8', '9'},
+                                {'*', '0', '#'}};
+
+const struct keypadPinConfig keypad_config = {
+    .COL0_PIN = 16,
+    .COL1_PIN = 17,
+    .COL2_PIN = 18,
+    .ROW0_PIN = 19,
+    .ROW1_PIN = 20,
+    .ROW2_PIN = 21,
+    .ROW3_PIN = 22
+};
+
+
+const struct DisplayPinConfig display_config = {
+    .RS_PIN = 2,
+    .RW_PIN = 3,
+    .EN_PIN = 4,
+    .DB0_PIN = 5,
+    .DB1_PIN = 6,
+    .DB2_PIN = 7,
+    .DB3_PIN = 8,
+    .DB4_PIN = 9,
+    .DB5_PIN = 10,
+    .DB6_PIN = 11,
+    .DB7_PIN = 12
+};
+                        
+
 int main()
 {
     stdio_init_all();
 
-    sleep_ms(10000);
-
-    struct DisplayPinConfig display_config;
-    display_config.RS_PIN = 2;
-    display_config.RW_PIN = 3;
-    display_config.EN_PIN = 4;
-    display_config.DB0_PIN = 5;
-    display_config.DB1_PIN = 6;
-    display_config.DB2_PIN = 7;
-    display_config.DB3_PIN = 8;
-    display_config.DB4_PIN = 9;
-    display_config.DB5_PIN = 10;
-    display_config.DB6_PIN = 11;
-    display_config.DB7_PIN = 12;
-
-    printf("Initializing display\n");
-
-    init_display(display_config);
-
     sleep_ms(5000);
 
-    printf("\nClear display\n");
-    display_clear();
-    sleep_ms(5);
+    
+    printf("Initializing display\n");
+    init_display(display_config);
 
-    printf("\nPrint \"Hello World\"\n");
+    display_print_string("Hello");
+    display_set_cursor(1, 0);    
 
-    display_print_string("Hello World!");
-    display_set_cursor(1, 3);
-    display_print_string("Welcome");
+
+    init_keypad(keypad_config, key_matrix);
+    
+
+    while(true){
+        char key = poll_keypad();
+        printf("Key: %x\n", key);
+        if(key == '#'){
+            break;
+        }
+        else if(key != 0){
+            display_print_character(key);
+            display_set_cursor(1, 0);    
+        }
+
+    }
 
     // Initialise the Wi-Fi chip
     if (cyw43_arch_init()) {
