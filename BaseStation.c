@@ -55,7 +55,7 @@ int main()
     printf("Initializing display\n");
     init_display(display_config);
 
-    display_print_string("Hello");
+    display_print_string("Hello world!");
     display_set_cursor(1, 0);    
 
 
@@ -66,11 +66,11 @@ int main()
         char key = poll_keypad();
         printf("Key: %x\n", key);
         if(key == '#'){
-            break;
+            display_clear();
         }
         else if(key != 0){
             display_print_character(key);
-            display_set_cursor(1, 0);    
+            //display_set_cursor(1, 0);    
         }
 
     }

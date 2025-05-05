@@ -16,6 +16,9 @@ static struct keypad_state{
 
     // Key matrix
     char key_matrix[4][3];
+
+    // Last state
+    bool key_state[4][3];
 } state;
 
 int init_keypad(struct keypadPinConfig pin_config, char key_matrix[4][3])
@@ -76,40 +79,50 @@ int init_keypad(struct keypadPinConfig pin_config, char key_matrix[4][3])
 
 char poll_keypad()
 {
-    while(true){
-        for(int i = 0; i < 3; i++){
-            // Turn on column
-            gpio_put(state.colPinsArray[i], true);
+    bool key_state[4][3] = {0};
 
-            sleep_us(1);
+    for(int i = 0; i < 3; i++){
+        // Turn on column
+        gpio_put(state.colPinsArray[i], true);
 
-            //printf("GPIO: %.2x\r", (gpio_get_all() & (state.keypad_col_pin_mask | state.keypad_row_pin_mask)) >> 16);
+        sleep_us(10);
 
-            uint32_t masked_row_gpio = gpio_get_all() & state.keypad_row_pin_mask;
+        uint32_t masked_row_gpio = gpio_get_all() & state.keypad_row_pin_mask;
 
-            if(masked_row_gpio){
-                if(masked_row_gpio & (1 << state.pin_config.ROW0_PIN)){
-                    gpio_put(state.colPinsArray[i], false);
-                    return state.key_matrix[0][i];
-                }
-                else if(masked_row_gpio & (1 << state.pin_config.ROW1_PIN)){
-                    gpio_put(state.colPinsArray[i], false);
-                    return state.key_matrix[1][i];
-                }
-                else if(masked_row_gpio & (1 << state.pin_config.ROW2_PIN)){
-                    gpio_put(state.colPinsArray[i], false);
-                    return state.key_matrix[2][i];
-                }
-                else if(masked_row_gpio & (1 << state.pin_config.ROW3_PIN)){
-                    gpio_put(state.colPinsArray[i], false);
-                    return state.key_matrix[3][i];
-                }
+        if(masked_row_gpio){
+            if(masked_row_gpio & (1 << state.pin_config.ROW0_PIN)){
+                printf("Key 0, %u is pressed \n", i);
+                key_state[0][i] = 1;
             }
-            
-            //Turn off column
-            gpio_put(state.colPinsArray[i], false);
+            else if(masked_row_gpio & (1 << state.pin_config.ROW1_PIN)){
+                printf("Key 1, %u is pressed \n", i);
+                key_state[1][i] = 1;
+            }
+            else if(masked_row_gpio & (1 << state.pin_config.ROW2_PIN)){
+                printf("Key 2, %u is pressed \n", i);
+                key_state[2][i] = 1;
+            }
+            else if(masked_row_gpio & (1 << state.pin_config.ROW3_PIN)){
+                printf("Key 3, %u is pressed \n", i);
+                key_state[3][i] = 1;
+            }
+        }
+        
+        //Turn off column
+        gpio_put(state.colPinsArray[i], false);
+    }
 
+    char result = 0;
+
+    // Positive edge detection
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 4; j++){
+            if( (key_state[j][i] == 1) && (state.key_state[j][i] == 0) ){
+                result = state.key_matrix[j][i];
+            }
+            state.key_state[j][i] = key_state[j][i];
         }
     }
-    return 0;
+
+    return result;
 }
