@@ -58,6 +58,8 @@ static int save_wifi_result(void *env, const cyw43_ev_scan_result_t* result){
     return 0;
 }
 
+//WeatherStationData parse_json_data(void* data){}
+
 static err_t headers_done_fn(httpc_state_t *connection, void *arg,
                              struct pbuf *hdr, u16_t hdr_len, u32_t content_len)
 {
