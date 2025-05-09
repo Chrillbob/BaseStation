@@ -4,6 +4,9 @@
 
 #include "display.h"
 #include "keypad.h"
+#include "userinterface.h"
+#include "networking.h"
+#include "buzzer.h"
 
 #define _DEBUGGING_
 
@@ -30,7 +33,7 @@ const struct keypadPinConfig keypad_config = {
 };
 
 
-const struct DisplayPinConfig display_config = {
+struct DisplayPinConfig display_config = {
     .RS_PIN = 2,
     .RW_PIN = 3,
     .EN_PIN = 4,
@@ -51,39 +54,24 @@ int main()
 
     sleep_ms(5000);
 
+
+    //init_buzzer(26);
+
     
     printf("Initializing display\n");
     init_display(display_config);
 
-    display_print_string("Hello world!");
-    display_set_cursor(1, 0);    
-
-
     init_keypad(keypad_config, key_matrix);
+
+    enum InterfaceState ui_state = init_ui();
+
+    // Enable the WiFi chip and driver
+    init_networking();
+
     
-
-    while(true){
-        char key = poll_keypad();
-        printf("Key: %x\n", key);
-        if(key == '#'){
-            display_clear();
-        }
-        else if(key != 0){
-            display_print_character(key);
-            //display_set_cursor(1, 0);    
-        }
-
-    }
-
-    // Initialise the Wi-Fi chip
-    if (cyw43_arch_init()) {
-        printf("Wi-Fi init failed\n");
-        return -1;
-    }
-
+    
     // Enable wifi station
-    cyw43_arch_enable_sta_mode();
-
+    /*
     printf("Connecting to Wi-Fi...\n");
     if (cyw43_arch_wifi_connect_timeout_ms("Chrillbob's Hotspot", "NotPassword", CYW43_AUTH_WPA2_AES_PSK, 30000)) {
         printf("Failed to connect to WiFi.\n");
@@ -93,11 +81,43 @@ int main()
         // Read the ip address in a human readable way
         uint8_t *ip_address = (uint8_t*)&(cyw43_state.netif[0].ip_addr.addr);
         printf("IP address %d.%d.%d.%d\n", ip_address[0], ip_address[1], ip_address[2], ip_address[3]);
+    }*/
+
+/*    while(cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) != CYW43_LINK_JOIN){
+        sleep_ms(5000);
+        printf(".");
     }
-
+*/
     while (true) {
-        printf("Hello, world!\n");
+        // Poll keypad
+        char key = poll_keypad();
 
-        sleep_ms(1000);
+        // If no key is pressed, continue loop
+        if(key == 0){
+            continue;
+        }
+        // Else call appropriate function
+        else {
+            if(ui_state == UI_WELCOME){
+                ui_state = welcome_page(key);
+            }
+            else if(ui_state == UI_DATA){
+                ui_state = data_page(key);
+            }
+            else if(ui_state == UI_SETTINGS){
+                ui_state = settings_page(key);
+            }
+            else if(ui_state == UI_SETTING_BUZZER){
+                ui_state = buzzer_settings_page(key);
+            }
+            else if(ui_state == UI_SETTINGS_WIFI){
+                ui_state = wifi_settings_page(key);
+
+            }
+            else{
+                ui_state = UI_WELCOME;
+            }
+        }
+
     }
 }

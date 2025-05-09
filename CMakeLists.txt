@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(BaseStation BaseStation.c display.c keypad.c)
+add_executable(BaseStation BaseStation.c display.c keypad.c userinterface.c networking.c buzzer.c)
 
 pico_set_program_name(BaseStation "BaseStation")
 pico_set_program_version(BaseStation "0.1")
@@ -46,7 +46,9 @@ pico_enable_stdio_usb(BaseStation 1)
 
 # Add the standard library to the build
 target_link_libraries(BaseStation
-        pico_stdlib)
+        pico_stdlib
+        hardware_pwm
+        hardware_irq)
 
 # Add the standard include files to the build
 target_include_directories(BaseStation PRIVATE
@@ -55,8 +57,12 @@ target_include_directories(BaseStation PRIVATE
 
 # Add any user requested libraries
 target_link_libraries(BaseStation 
-        pico_cyw43_arch_lwip_poll
-        )
+    pico_cyw43_arch_lwip_threadsafe_background 
+    pico_lwip 
+    pico_lwip_nosys
+    pico_lwip_http
+    pico_mbedtls
+)
 
 pico_add_extra_outputs(BaseStation)
 

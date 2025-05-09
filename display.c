@@ -50,18 +50,18 @@ int init_display(struct DisplayPinConfig config)
 
 
     // Configure display controller to use 8-bit interface, two line display and simple font
-    printf("\nFunction set\n");
+    printf("Function set\n");
     _display_function_set_(DISPLAY_INTERFACE_EIGHT_BIT, DISPLAY_TWO_LINES, DISPLAY_SIMPLE_FONT);
 
-    printf("\nClear display\n");
+    printf("Clear display\n");
     _display_clear_();
 
     // Configure display to shift cursor right after read/write and not shift display.
-    printf("\nEntry mode set\n");
+    printf("Entry mode set\n");
     _display_entry_mode_set_(true, false);
 
     // Turn on display and keep cursor and cursor blinking off
-    printf("\nDisplay on\n");
+    printf("Display on\n");
     _display_on_off_control_(DISPLAY_ON, DISPLAY_CURSOR_OFF, DISPLAY_CURSOR_BLINKING_OFF);
 
     return 0;
@@ -77,7 +77,6 @@ int display_print_string(char * string)
 {
     uint8_t i = 0;
     while(string[i] != '\0'){
-        printf("\nPrinting character: %c (%x in hex) from string[%u]\n", string[i], string[i], i);
         display_print_character(string[i]);
         i++;
     }
@@ -128,16 +127,12 @@ bool _display_read_busy_flag_()
 {
     char busy_flag_and_address_counter = _display_read_busy_flag_and_address_counter_();
 
-    printf("Busy flag and address counter: 0x%.2x\n", busy_flag_and_address_counter);
-
     return busy_flag_and_address_counter & 0x80;
 }
 
 char _display_read_address_counter_()
 {
     char busy_flag_and_address_counter = _display_read_busy_flag_and_address_counter_();
-
-    printf("Busy flag and address counter: 0x%.2x\n", busy_flag_and_address_counter);
 
     return busy_flag_and_address_counter & 0x7f;
 }
@@ -302,8 +297,6 @@ char _display_read_data_pins_(enum display_register_select register_select)
     // Get all gpio_values
     uint32_t gpio_values = gpio_get_all();
 
-    printf("GPIO values at read: 0x%.8x\n", gpio_values);
-
     _display_stop_data_transfer_();
 
     sleep_us(1);
@@ -341,14 +334,9 @@ void _display_write_(char data, enum display_register_select register_select)
 
     uint32_t output_mask = _construct_output_mask_(data);
 
-    printf("Output mask: 0x%.4x\n", output_mask);
-    printf("GPIO data mask: 0x%.4x\n", state.display_gpio_data_mask);
-
-
     gpio_put_masked(state.display_gpio_data_mask, output_mask);
 
     uint32_t gpio_values = gpio_get_all();
-    printf("GPIO values at write: 0x%.8x\n", gpio_values);
 
 
     sleep_us(1);
@@ -385,8 +373,6 @@ uint32_t _construct_output_mask_(char data){
     output_mask = output_mask | (((data & (1 << 5)) != 0) << state.Config.DB5_PIN);
     output_mask = output_mask | (((data & (1 << 6)) != 0) << state.Config.DB6_PIN);
     output_mask = output_mask | (((data & (1 << 7)) != 0) << state.Config.DB7_PIN);
-
-    printf("Output mask: 0x%.8x\n", output_mask);
 
     return output_mask;
 }

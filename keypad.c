@@ -91,19 +91,15 @@ char poll_keypad()
 
         if(masked_row_gpio){
             if(masked_row_gpio & (1 << state.pin_config.ROW0_PIN)){
-                printf("Key 0, %u is pressed \n", i);
                 key_state[0][i] = 1;
             }
             else if(masked_row_gpio & (1 << state.pin_config.ROW1_PIN)){
-                printf("Key 1, %u is pressed \n", i);
                 key_state[1][i] = 1;
             }
             else if(masked_row_gpio & (1 << state.pin_config.ROW2_PIN)){
-                printf("Key 2, %u is pressed \n", i);
                 key_state[2][i] = 1;
             }
             else if(masked_row_gpio & (1 << state.pin_config.ROW3_PIN)){
-                printf("Key 3, %u is pressed \n", i);
                 key_state[3][i] = 1;
             }
         }
