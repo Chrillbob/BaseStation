@@ -1,7 +1,8 @@
 #include "pico/stdlib.h"
 #include "userinterface.h"
 #include "display.h"
-#include "networking.h"
+#include "wifi.h"
+#include "server_interface.h"
 
 #include "pico/time.h"
 

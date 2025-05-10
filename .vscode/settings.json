@@ -64,6 +64,8 @@
         "opt.h": "c",
         "string": "c",
         "mdns.h": "c",
-        "httpd.h": "c"
+        "httpd.h": "c",
+        "string.h": "c",
+        "server_interface.h": "c"
     }
 }

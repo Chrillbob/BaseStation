@@ -1,18 +1,5 @@
-#ifndef NETWORKING_H
-#define NETWORKING_H
-
-typedef struct {
-    float temp;
-    float humidity;
-    float wind_spd;
-    float wind_dir;
-    float pressure;
-    float smoke;
-    float ambient_light;
-} WeatherStationData;
-
-void request_last_data();
-
+#ifndef WIFI_H
+#define WIFI_H
 
 int init_wifi();
 
@@ -32,4 +19,4 @@ void scan_for_networks();
 
 
 
-#endif
+#endif //WIFI_H

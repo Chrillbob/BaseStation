@@ -5,7 +5,8 @@
 #include "display.h"
 #include "keypad.h"
 #include "userinterface.h"
-#include "networking.h"
+#include "wifi.h"
+#include "server_interface.h"
 #include "buzzer.h"
 
 #define _DEBUGGING_
@@ -66,7 +67,7 @@ int main()
     enum InterfaceState ui_state = init_ui();
 
     // Enable the WiFi chip and driver
-    init_networking();
+    init_wifi();
 
     
     
