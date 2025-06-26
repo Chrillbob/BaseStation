@@ -42,7 +42,8 @@ add_executable(BaseStation
     userinterface.c 
     wifi.c 
     server_interface.c
-    buzzer.c)
+    buzzer.c
+    json.c)
 
 pico_set_program_name(BaseStation "BaseStation")
 pico_set_program_version(BaseStation "0.1")

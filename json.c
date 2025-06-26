@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-//#include <stdlib.h>
+#include <stdlib.h>
 #include "pico/stdlib.h"
 
 json_err_t find_json_element(raw_json_t raw_json_object, char *element_key, json_element_t * result)

@@ -5,12 +5,14 @@
 #include "lwip/apps/http_client.h"
 #include "wifi.h"
 
-#define NETWORK_BUFFER_SIZE 8
+#define NETWORK_BUFFER_SIZE 16
 
 typedef struct{
     cyw43_ev_scan_result_t scan_result;
     bool empty;
 } wifi_network;
+
+static bool muted = 0;
 
 static wifi_network networks_buffer[NETWORK_BUFFER_SIZE];
 
@@ -48,7 +50,7 @@ static int save_wifi_result(void *env, const cyw43_ev_scan_result_t* result){
             networks_buffer[i].scan_result = *result;
             networks_buffer[i].empty = false;
 
-            printf("id: %1d ssid: %-32s\n", i, networks_buffer[i].scan_result.ssid);
+            printf("id: %-3d ssid: %-32s auth: %u\n", i, networks_buffer[i].scan_result.ssid, networks_buffer[i].scan_result.auth_mode);
             break;
         }
     }
@@ -95,6 +97,8 @@ char *get_network_ssid(uint8_t network)
 
 int connect_to_network(uint8_t network)
 {
+    printf("Joining wifi %.3u: %-32s\n", network, networks_buffer[network].scan_result.ssid);
+
     // Connect if Chrillbob's Hotspot
     if(strcmp(networks_buffer[network].scan_result.ssid, "Chrillbob's Hotspot") == 0){
         printf("Joining Chrillbob's Hotspot\n");

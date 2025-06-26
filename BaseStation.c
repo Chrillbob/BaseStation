@@ -9,11 +9,7 @@
 #include "server_interface.h"
 #include "buzzer.h"
 
-#define _DEBUGGING_
-
-#ifdef _DEBUGGING_
 #include "pico/time.h"
-#endif
 
 #define N_ROWS 4
 #define N_COLS 3
@@ -51,50 +47,47 @@ struct DisplayPinConfig display_config = {
 
 int main()
 {
-    stdio_init_all();
+    absolute_time_t timestamp = make_timeout_time_ms(60000);
 
+
+    stdio_init_all();
     sleep_ms(5000);
 
 
-    //init_buzzer(26);
+    init_buzzer(26);
 
-    
     printf("Initializing display\n");
     init_display(display_config);
 
+    printf("Initializing keypad\n");
     init_keypad(keypad_config, key_matrix);
 
+    printf("Initializing UI\n");
     enum InterfaceState ui_state = init_ui();
 
     // Enable the WiFi chip and driver
     init_wifi();
 
-    
-    
-    // Enable wifi station
-    /*
-    printf("Connecting to Wi-Fi...\n");
-    if (cyw43_arch_wifi_connect_timeout_ms("Chrillbob's Hotspot", "NotPassword", CYW43_AUTH_WPA2_AES_PSK, 30000)) {
-        printf("Failed to connect to WiFi.\n");
-        return 1;
-    } else {
-        printf("Connected to WiFi\n");
-        // Read the ip address in a human readable way
-        uint8_t *ip_address = (uint8_t*)&(cyw43_state.netif[0].ip_addr.addr);
-        printf("IP address %d.%d.%d.%d\n", ip_address[0], ip_address[1], ip_address[2], ip_address[3]);
-    }*/
-
-/*    while(cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) != CYW43_LINK_JOIN){
-        sleep_ms(5000);
-        printf(".");
-    }
-*/
     while (true) {
+        // If more than 60 seconds have passed since last request send 
+        // a new request to the server
+        if(timestamp < get_absolute_time()){
+            // Make request to server for last data
+            request_last_data();
+
+
+            timestamp = make_timeout_time_ms(10000);
+        }
+
         // Poll keypad
         char key = poll_keypad();
 
+        // If no key is pressed but there is new data and current page is data update page
+        if(new_data() && ui_state == UI_DATA){
+            ui_state = data_page(key);
+        }
         // If no key is pressed, continue loop
-        if(key == 0){
+        else if(key == NO_INPUT){
             continue;
         }
         // Else call appropriate function

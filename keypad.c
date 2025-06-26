@@ -21,7 +21,7 @@ static struct keypad_state{
     bool key_state[4][3];
 } state;
 
-int init_keypad(struct keypadPinConfig pin_config, char key_matrix[4][3])
+int init_keypad(struct keypadPinConfig pin_config, const char key_matrix[4][3])
 {
     // Save pin_config to state
     state.pin_config = pin_config;

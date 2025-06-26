@@ -66,6 +66,8 @@
         "mdns.h": "c",
         "httpd.h": "c",
         "string.h": "c",
-        "server_interface.h": "c"
-    }
+        "server_interface.h": "c",
+        "json.h": "c"
+    },
+    "cortex-debug.variableUseNaturalFormat": true
 }

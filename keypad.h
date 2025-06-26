@@ -21,7 +21,7 @@ struct keypadPinConfig{
  * 
  * @param pin_config
  */
-int init_keypad(struct keypadPinConfig pin_config, char key_matrix[4][3]);
+int init_keypad(struct keypadPinConfig pin_config, char const key_matrix[4][3]);
 
 /**
  * @brief Scan keypad for pressed keys
@@ -29,10 +29,5 @@ int init_keypad(struct keypadPinConfig pin_config, char key_matrix[4][3]);
  * @return Character of first pressed key encountered
  */
 char poll_keypad();
-
-
-
-
-
 
 #endif

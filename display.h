@@ -60,7 +60,7 @@ int init_display(struct DisplayPinConfig config);
  * 
  * @param character Character to be printed.
  */
-int display_print_character(char character);
+int display_print_character(const char character);
 
 /**
  * @brief Prints string to display at current cursor loacation
@@ -68,9 +68,15 @@ int display_print_character(char character);
  * @param string String to be printed. If it exceeds the size of the 
  * display data RAM the string will wrap around to the beginning of the display.
  */
-int display_print_string(char* string);
+int display_print_string(const char* string);
 
-
+/**
+ * @brief Prints string to display right justified at specified line
+ * 
+ * @param string String to be printed. If it exceeds the size of a
+ * the line the string will wrap around to the other line in the display DDRAM.
+ */
+int display_print_string_rj(const char* string, uint8_t line);
 
 
 /**
@@ -229,7 +235,7 @@ char _display_read_busy_flag_and_address_counter_();
  * 
  * @param data Data to be written to display
  * **/
-void _display_write_data_(char data);
+void _display_write_data_(const char data);
 
 /**
  * @return Returns data read from display controller DDRAM og CGRAM.

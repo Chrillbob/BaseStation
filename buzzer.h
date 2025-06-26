@@ -45,6 +45,10 @@ enum buzzer_note{
  */
 void init_buzzer(uint8_t buzzer_pin);
 
+void buzzer_put(bool start);
+
+void buzzer_stop();
+
 /**
  * @brief Play brief introduction melody
  */
@@ -52,9 +56,7 @@ void melody();
 
 void set_note(/*enum buzzer_note note*/);
 
-void buzzer_start();
 
-void buzzer_stop();
 
 void buzzer_set_volume();
 

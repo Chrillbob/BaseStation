@@ -2,6 +2,7 @@
 
 #include "pico/stdlib.h"
 #include "pico/time.h"
+#include "string.h"
 
 // For debugging
 #include <stdio.h>
@@ -67,14 +68,29 @@ int init_display(struct DisplayPinConfig config)
     return 0;
 }
 
-int display_print_character(char character)
+int display_print_character(const char character)
 {
     _display_write_data_(character);
     return 0;
 }
 
-int display_print_string(char * string)
+int display_print_string(const char * string)
 {
+    uint8_t i = 0;
+    while(string[i] != '\0'){
+        display_print_character(string[i]);
+        i++;
+    }
+
+    return 0;
+}
+
+int display_print_string_rj(const char *string, uint8_t line)
+{
+    size_t string_len = strlen(string);
+
+    display_set_cursor(line, (80 + 16 - string_len) % 80);
+
     uint8_t i = 0;
     while(string[i] != '\0'){
         display_print_character(string[i]);
@@ -235,7 +251,7 @@ void _display_set_CGRAM_address_(uint8_t cgram_address)
 void _display_set_DDRAM_address_(uint8_t ddram_address)
 {
     // Save arguments to state
-    state.ddram_address = ddram_address;
+    state.ddram_address = ddram_address % 80;
 
     // Construct instruction
     char data = 0x7F & ddram_address;
@@ -251,7 +267,7 @@ char _display_read_busy_flag_and_address_counter_()
     return _display_read_data_pins_(DISPLAY_INSTR_REG);;
 }
 
-void _display_write_data_(char data)
+void _display_write_data_(const char data)
 {
     // Update cursor and display position
     _display_update_cursor_and_display_pos_(state.address_incr, state.cursor_following);
